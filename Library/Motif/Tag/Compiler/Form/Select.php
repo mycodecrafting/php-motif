@@ -27,8 +27,9 @@ class Motif_Tag_Compiler_Form_Select extends Motif_Tag_Compiler_Abstract
     protected function _declareAttributes()
     {
         $this->_attributes = array(
-            'var'     => new Motif_Tag_Attribute_Required(self::MATCH_VAR),
-            'options' => new Motif_Tag_Attribute_Required(self::MATCH_VAR),
+            'var'       => new Motif_Tag_Attribute_Required(self::MATCH_VAR),
+            'options'   => new Motif_Tag_Attribute_Required(self::MATCH_VAR),
+            'id'        => new Motif_Tag_Attribute(self::MATCH_WILDCARD),
         );
     }
 
@@ -41,11 +42,12 @@ class Motif_Tag_Compiler_Form_Select extends Motif_Tag_Compiler_Abstract
         {
             $inputName = $this->getAttribute('var');
             $options = $this->getAttribute('options');
-            $inputAttrs = $this->_getAttributeString($exclude = 'var', 'options');
+            $inputId = $this->getAttribute('id');
+            $inputAttrs = $this->_getAttributeString($exclude = 'var', 'options', 'id');
 
             $code = sprintf(
-                '<select name="%1$s" id="%1$s"%2$s>' . NL .
-                    '<motif:block var="%3$s">' . NL .
+                '<select name="%1$s" id="%2$s"%3$s>' . NL .
+                    '<motif:block var="%4$s">' . NL .
                         '<motif:choose>' . NL .
                             '<motif:when var="parent.%1$s" value="item.value" isvar="isvar">' . NL .
                                 '<option value="{item.value}" selected="selected">{item.name}</option>' . NL .
@@ -57,6 +59,7 @@ class Motif_Tag_Compiler_Form_Select extends Motif_Tag_Compiler_Abstract
                     '</motif:block>' . NL .
                 '</select>',
                 $inputName,
+                ($inputId ? $inputId : $inputName),
                 $inputAttrs,
                 $options
             );
