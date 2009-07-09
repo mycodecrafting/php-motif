@@ -66,6 +66,7 @@ class Motif_Tag_Compiler_Block extends Motif_Tag_Compiler_Abstract
                         '}' . NL .
                         '$___row[\'block\'][\'count\'] = $___arraySize;' . NL .
                         '$___row[\'block\'][\'rowCount\'] = $___cnt + 1;' . NL .
+                        '$___row[\'block\'][\'index\'] = $___cnt;' . NL .
                 		'$___row[\'block\'][\'altRow\'] = $___cnt % 2;' . NL .
                 		'$___row[\'block\'][\'oddEven\'] = (($___cnt % 2) ? \'odd\' : \'even\');' . NL .
                 		'$___row[\'block\'][\'rowBit\'] = $___cnt % 2;' . NL .
