@@ -29,6 +29,7 @@ class Motif_Tag_Compiler_Form_Password extends Motif_Tag_Compiler_Abstract
         $this->_attributes = array(
             'var'   => new Motif_Tag_Attribute_Required(self::MATCH_VAR),
             'value' => new Motif_Tag_Attribute(self::MATCH_WILDCARD),
+            'id'    => new Motif_Tag_Attribute(self::MATCH_WILDCARD),
         );
     }
 
@@ -40,8 +41,9 @@ class Motif_Tag_Compiler_Form_Password extends Motif_Tag_Compiler_Abstract
         foreach ($this->_tagMatches as $match)
         {
             $inputName = $this->getAttribute('var');
+            $inputId = $this->getAttribute('id');
             $inputValue = $this->getAttribute('value');
-            $inputAttrs = $this->_getAttributeString($exclude = 'var', 'value');
+            $inputAttrs = $this->_getAttributeString($exclude = 'var', 'value', 'id');
 
             /**
              * Do replacement
@@ -49,13 +51,14 @@ class Motif_Tag_Compiler_Form_Password extends Motif_Tag_Compiler_Abstract
             $this->_replaceCode(sprintf(
                 '<motif:choose>' . NL .
                     '<motif:when var="%1$s">' . NL .
-                        '<input type="password" name="%1$s" id="%1$s" value="{%1$s}"%3$s />' . NL .
+                        '<input type="password" name="%1$s" id="%2$s" value="{%1$s}"%4$s />' . NL .
                     '</motif:when>' . NL .
                     '<motif:otherwise>' .
-                        '<input type="password" name="%1$s" id="%1$s" value="%2$s"%3$s />' . NL .
+                        '<input type="password" name="%1$s" id="%2$s" value="%3$s"%4$s />' . NL .
                     '</motif:otherwise>' . NL .
                 '</motif:choose>',
                 $inputName,
+                ($inputId ? $inputId : $inputName),
                 $inputValue,
                 $inputAttrs
             ));
