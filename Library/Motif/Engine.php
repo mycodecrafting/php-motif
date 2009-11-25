@@ -189,7 +189,7 @@ class Motif_Engine
              */
             if (array_key_exists($tagName, self::$_registered) === true)
             {
-                $class = self::$_registered[$tag];
+                $class = self::$_registered[$tagName];
             }
 
             /**
