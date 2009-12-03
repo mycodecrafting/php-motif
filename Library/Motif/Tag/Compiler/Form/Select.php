@@ -49,11 +49,29 @@ class Motif_Tag_Compiler_Form_Select extends Motif_Tag_Compiler_Abstract
                 '<select name="%1$s" id="%2$s"%3$s>' . NL .
                     '<motif:block var="%4$s">' . NL .
                         '<motif:choose>' . NL .
-                            '<motif:when var="parent.%1$s" value="item.value" isvar="isvar">' . NL .
-                                '<option value="{item.value}" selected="selected">{item.name}</option>' . NL .
+                            '<motif:when var="item.group" condition="exists">' . NL .
+                                '<optgroup label="{item.name}">' . NL .
+                                    '<motif:block var="item.group">' . NL .
+                                        '<motif:choose>' . NL .
+                                            '<motif:when var="parent.parent.%1$s" value="item.value" isvar="isvar">' . NL .
+                                                '<option value="{item.value}" selected="selected">{item.name}</option>' . NL .
+                                            '</motif:when>' . NL .
+                                            '<motif:otherwise>' . NL .
+                                                '<option value="{item.value}">{item.name}</option>' . NL .
+                                            '</motif:otherwise>' . NL .
+                                        '</motif:choose>' . NL .
+                                    '</motif:block>' . NL .
+                                '</optgroup>' . NL .
                             '</motif:when>' . NL .
                             '<motif:otherwise>' . NL .
-                                '<option value="{item.value}">{item.name}</option>' . NL .
+                                '<motif:choose>' . NL .
+                                    '<motif:when var="parent.%1$s" value="item.value" isvar="isvar">' . NL .
+                                        '<option value="{item.value}" selected="selected">{item.name}</option>' . NL .
+                                    '</motif:when>' . NL .
+                                    '<motif:otherwise>' . NL .
+                                        '<option value="{item.value}">{item.name}</option>' . NL .
+                                    '</motif:otherwise>' . NL .
+                                '</motif:choose>' . NL .
                             '</motif:otherwise>' . NL .
                         '</motif:choose>' . NL .
                     '</motif:block>' . NL .
