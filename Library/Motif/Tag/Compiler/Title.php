@@ -4,20 +4,20 @@
 
 
 /**
- * Compile <motif:style src="relative/path/to/styles.css" />
+ * Compile <motif:title>Put the title here</motif:title>
  */
-class Motif_Tag_Compiler_Style extends Motif_Tag_Compiler_Abstract
+class Motif_Tag_Compiler_Title extends Motif_Tag_Compiler_Abstract
 {
 
     /**
      * @var string Tag's name
      */
-    protected $_tagName = 'style';
+    protected $_tagName = 'title';
 
     /**
      * @var boolean Tag has pairs? (opening and closing)
      */
-    protected $_hasTagPairs = false;
+    protected $_hasTagPairs = true;
 
     /**
      * Declare attributes for this tag
@@ -26,9 +26,7 @@ class Motif_Tag_Compiler_Style extends Motif_Tag_Compiler_Abstract
      */
     protected function _declareAttributes()
     {
-        $this->_attributes = array(
-            'src' => new Motif_Tag_Attribute_Required(self::MATCH_WILDCARD),
-        );
+        $this->_attributes = array();
     }
 
     /**
@@ -36,27 +34,39 @@ class Motif_Tag_Compiler_Style extends Motif_Tag_Compiler_Abstract
      */
     protected function _compileMatches()
     {
+        /**
+         * Parse opening tags
+         */
+        $nameCode = $this->_parseVarName('motif.title');
+
         foreach ($this->_tagMatches as $match)
         {
-            $nameCode = $this->_parseVarName('motif.style');
-            $src = $this->getAttribute('src');
-
-            $code = '' .
-                '\');' . NL .
+        	$code = '' .
+        	    '\');' . NL .
                 'ob_start();' . NL .
                 "if (!isset({$nameCode}))" . NL .
                 '{' . NL .
-                    "{$nameCode} = '';" . NL .
+                    "{$nameCode} = array();" . NL .
                 '}' . NL .
-                "include(\$___engine->getTemplate()->includeTemplate('$src'));" . NL .
-                "{$nameCode} .= ob_get_clean() . NL;" . NL .
-                'echo(\'';
+                "\$___t =& {$nameCode};" . NL .
+        		'echo(\'';
 
             /**
              * Do replacement
              */
             $this->_replaceCode($code);
         }
+
+        /**
+         * Parse closing tags
+         */
+        $code = '' .
+            '\');' . NL .
+            '$___t = ob_get_clean();' . NL .
+            'unset($___t);' . NL .
+            'echo(\'';
+
+        $this->_replaceCode($code, self::CLOSING_TAGS);
     }
 
 }

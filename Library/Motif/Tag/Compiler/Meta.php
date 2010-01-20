@@ -4,15 +4,15 @@
 
 
 /**
- * Compile <motif:style src="relative/path/to/styles.css" />
+ * Compile <motif:meta name="keywords|description" content="Put the content here" />
  */
-class Motif_Tag_Compiler_Style extends Motif_Tag_Compiler_Abstract
+class Motif_Tag_Compiler_Meta extends Motif_Tag_Compiler_Abstract
 {
 
     /**
      * @var string Tag's name
      */
-    protected $_tagName = 'style';
+    protected $_tagName = 'meta';
 
     /**
      * @var boolean Tag has pairs? (opening and closing)
@@ -27,7 +27,8 @@ class Motif_Tag_Compiler_Style extends Motif_Tag_Compiler_Abstract
     protected function _declareAttributes()
     {
         $this->_attributes = array(
-            'src' => new Motif_Tag_Attribute_Required(self::MATCH_WILDCARD),
+            'name'      => new Motif_Tag_Attribute_Required('keywords|description'),
+            'content'   => new Motif_Tag_Attribute_Required(self::MATCH_WILDCARD),
         );
     }
 
@@ -38,18 +39,14 @@ class Motif_Tag_Compiler_Style extends Motif_Tag_Compiler_Abstract
     {
         foreach ($this->_tagMatches as $match)
         {
-            $nameCode = $this->_parseVarName('motif.style');
-            $src = $this->getAttribute('src');
+            $nameCode = $this->_parseVarName(sprintf('motif.meta.%s', $this->getAttribute('name')));
+            $content = $this->getAttribute('content');
 
             $code = '' .
                 '\');' . NL .
                 'ob_start();' . NL .
-                "if (!isset({$nameCode}))" . NL .
-                '{' . NL .
-                    "{$nameCode} = '';" . NL .
-                '}' . NL .
-                "include(\$___engine->getTemplate()->includeTemplate('$src'));" . NL .
-                "{$nameCode} .= ob_get_clean() . NL;" . NL .
+                "echo('{$content}');" . NL .
+                "{$nameCode} = ob_get_clean();" . NL .
                 'echo(\'';
 
             /**

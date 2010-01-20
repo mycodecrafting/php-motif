@@ -38,17 +38,18 @@ class Motif_Tag_Compiler_Script extends Motif_Tag_Compiler_Abstract
     {
         foreach ($this->_tagMatches as $match)
         {
+            $nameCode = $this->_parseVarName('motif.script');
             $src = $this->getAttribute('src');
 
             $code = '' .
                 '\');' . NL .
                 'ob_start();' . NL .
-                "if (!isset(\$___vars['motif']['script']))" . NL .
+                "if (!isset({$nameCode}))" . NL .
                 '{' . NL .
-                    "\$___vars['motif']['script'] = '';" . NL .
+                    "{$nameCode} = '';" . NL .
                 '}' . NL .
                 "include(\$___engine->getTemplate()->includeTemplate('$src'));" . NL .
-                "\$___vars['motif']['script'] .= ob_get_clean() . NL;" . NL .
+                "{$nameCode} .= ob_get_clean() . NL;" . NL .
                 'echo(\'';
 
             /**
