@@ -230,22 +230,22 @@ abstract class Motif_Tag_Compiler_Abstract
         switch ($search)
         {
             case false:
-                $search = $this->getMatch();
+                $search = sprintf('/(\/\*)?%s(\*\/)?/', preg_quote($this->getMatch(), '/'));
                 break;
 
             case self::OPENING_TAGS:
-                $search = sprintf('<motif:%s>', $this->getTagName());
+                $search = sprintf('/(\/\*)?<motif:%s>(\*\/)?/', $this->getTagName());
                 break;
 
             case self::CLOSING_TAGS:
-                $search = sprintf('</motif:%s>', $this->getTagName());
+                $search = sprintf('/(\/\*)?<\/motif:%s>(\*\/)?/', $this->getTagName());
                 break;
 
             default:
                 break;
         }
 
-        $this->_code = str_replace($search, $replacement, $this->_code);
+        $this->_code = preg_replace($search, $replacement, $this->_code);
     }
 
     /**
