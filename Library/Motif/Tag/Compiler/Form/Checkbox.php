@@ -29,6 +29,7 @@ class Motif_Tag_Compiler_Form_Checkbox extends Motif_Tag_Compiler_Abstract
         $this->_attributes = array(
             'var' => new Motif_Tag_Attribute_Required(self::MATCH_VAR),
             'value' => new Motif_Tag_Attribute_Required(self::MATCH_WILDCARD),
+            'id'    => new Motif_Tag_Attribute(self::MATCH_WILDCARD),
         );
     }
 
@@ -40,9 +41,10 @@ class Motif_Tag_Compiler_Form_Checkbox extends Motif_Tag_Compiler_Abstract
         foreach ($this->_tagMatches as $match)
         {
             $inputName = $this->getAttribute('var');
+            $inputId = $this->getAttribute('id');
             $inputValue = $this->getAttribute('value');
-            $inputAttrs = $this->_getAttributeString($exclude = 'var', 'value');
-            $inputAttrsNotChecked = $this->_getAttributeString($exclude = 'var', 'value', 'checked');
+            $inputAttrs = $this->_getAttributeString($exclude = 'var', 'value', 'id');
+            $inputAttrsNotChecked = $this->_getAttributeString($exclude = 'var', 'value', 'id', 'checked');
 
             /**
              * Do replacement
@@ -50,16 +52,17 @@ class Motif_Tag_Compiler_Form_Checkbox extends Motif_Tag_Compiler_Abstract
             $this->_replaceCode(sprintf(
                 '<motif:choose>' . NL .
                     '<motif:when var="%1$s" value="%2$s">' . NL .
-                        '<input type="checkbox" name="%1$s" id="%1$s" value="%2$s"%4$s checked="checked" />' . NL .
+                        '<input type="checkbox" name="%1$s" id="%5$s" value="%2$s"%4$s checked="checked" />' . NL .
                     '</motif:when>' . NL .
                     '<motif:otherwise>' . NL .
-                        '<input type="checkbox" name="%1$s" id="%1$s" value="%2$s"%3$s />' . NL .
+                        '<input type="checkbox" name="%1$s" id="%5$s" value="%2$s"%3$s />' . NL .
                     '</motif:otherwise>' . NL .
                 '</motif:choose>',
                 $inputName,
                 $inputValue,
                 $inputAttrs,
-                $inputAttrsNotChecked
+                $inputAttrsNotChecked,
+                ($inputId ? $inputId : $inputName)
             ));
         }
     }
