@@ -39,16 +39,20 @@ abstract class Motif_Tag_Compiler_Abstract
     /**
      * @const Opening tags internal identifier
      */
-    const OPENING_TAGS = '__OPENING_TAGS__';
+    const OPENING_TAGS      = '__OPENING_TAGS__';
 
     /**
      * @const Closing tags internal identifier
      */
-    const CLOSING_TAGS = '__CLOSING_TAGS__';
+    const CLOSING_TAGS      = '__CLOSING_TAGS__';
 
-    const MATCH_VAR = '[A-z0-9_.]+';
-    const MATCH_WILDCARD = '[^"]+';
-    const MATCH_CONDITION = '(not)?exists|>|gt|>=|gte|<|lt|<=|lte|<>|\!=|=|(not)?equal';
+    const MATCH_VAR         = '[A-z0-9_.]+';
+    const MATCH_MULTI_VAR   = '[A-z0-9_.&|\s]+';
+    const MATCH_WILDCARD    = '[^"]+';
+    const MATCH_CONDITION   = '(not)?exists|>|gt|>=|gte|<|lt|<=|lte|<>|\!=|=|(not)?equal';
+
+    const LOGICAL_OR        = '||';
+    const LOGICAL_AND       = '&&';
 
     public function __construct(array $tagMatches = array())
     {
@@ -305,6 +309,34 @@ abstract class Motif_Tag_Compiler_Abstract
         $code .= sprintf("['%s']", $var);
 
         return $code;
+    }
+
+    /**
+     * ...
+     */
+    protected function _parseMultiVars($statement)
+    {
+        $parts = array();
+
+        foreach (preg_split('/(\s?\|\|\s?|\s+or\s+|\s?&&\s?|\s+and\s+)/i', $statement, -1, PREG_SPLIT_DELIM_CAPTURE) as $part)
+        {
+            switch (true)
+            {
+                case (preg_match('/^(\|\||or)$/i', $part)):
+                    $parts[] = self::LOGICAL_OR;
+                    break;
+
+                case (preg_match('/^(&&|and)$/i', $part)):
+                    $parts[] = self::LOGICAL_AND;
+                    break;
+
+                case ($this->_isVarMatch($part)):
+                    $parts[] = $part;
+                    break;
+            }
+        }
+
+        return $parts;
     }
 
     /**

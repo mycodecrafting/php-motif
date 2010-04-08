@@ -27,7 +27,7 @@ class Motif_Tag_Compiler_If extends Motif_Tag_Compiler_Abstract
     protected function _declareAttributes()
     {
     	$this->_attributes = array(
-    		'var'       => new Motif_Tag_Attribute_Required(self::MATCH_VAR),
+    		'var'       => new Motif_Tag_Attribute_Required(self::MATCH_MULTI_VAR),
     		'value'     => new Motif_Tag_Attribute(self::MATCH_WILDCARD),
     		'condition' => new Motif_Tag_Attribute(self::MATCH_CONDITION),
     		'isvar'     => new Motif_Tag_Attribute('isvar'),
@@ -41,83 +41,28 @@ class Motif_Tag_Compiler_If extends Motif_Tag_Compiler_Abstract
     {
         foreach ($this->_tagMatches as $match)
         {
-            $varCode = $this->_parseVarName($this->getAttribute('var'));
-    		$condition = $this->_parseCondition();
+            $statement = '';
 
-            /**
-             * Parse <motif:if var="tplVar" [condition="gte" isvar="isvar"] value="somevalue">
-             */
-            if (($value = $this->getAttribute('value')) !== false)
+            foreach ($this->_parseMultiVars($this->getAttribute('var')) as $var)
             {
-                $preOp = '';
-                $op = '&&';
-
-                if ($condition === '!=')
+                switch ($var)
                 {
-                    $preOp = '!';
-                    $op = '||';
+                    case self::LOGICAL_OR:
+                    case self::LOGICAL_AND:
+                        $statement .= sprintf(' %s ', $var);
+                        break;
+
+                    default:
+                        $statement .= $this->_compileVarMatch($var);
+                        break;
                 }
-
-                /**
-                 * value: true, false, numeric
-                 */
-                if (preg_match('/^(true|false|([0-9]+))$/', strtolower($value)))
-                {
-                    $value = strtolower($value);
-                }
-
-                /**
-                 * value: isvar
-                 */
-                elseif ($this->getAttribute('isvar') && $this->_isVarMatch($value))
-                {
-                    $value = $this->_parseVarName($value);
-
-                    $op = sprintf('&& isset(%s) &&', $value);
-
-                    if ($condition === '!=')
-                    {
-                        $op = sprintf('|| !isset(%s) ||', $value);
-                    }
-                }
-
-                /**
-                 * value: string
-                 */
-                else
-                {
-                    $value = sprintf('\'%s\'', $value);
-                }
-
-				$code = '' .
-				    '\');' . NL .
-                    "if ({$preOp}isset({$varCode}) $op ({$varCode} $condition $value))" . NL .
-                    '{' . NL .
-					    'echo(\'';
             }
 
-            /**
-             * Parse <motif:if var="tplVar" [condition="notexists"]>
-             */
-            else
-            {
-                $preOp = '';
-                $preOp2 = '!';
-                $op = '&&';
-
-                if ($condition === 'notexists')
-                {
-                    $preOp = '!';
-                    $preOp2 = '';
-                    $op = '||';
-                }
-
-				$code = '' .
-				    '\');' . NL .
-                    "if ({$preOp}isset({$varCode}) $op {$preOp2}empty({$varCode}))" . NL .
-                    '{' . NL .
-                        'echo(\'';
-            }
+			$code = '' .
+			    '\');' . NL .
+                "if ({$statement})" . NL .
+                '{' . NL .
+                    'echo(\'';
 
             /**
              * Do replacement
@@ -134,6 +79,84 @@ class Motif_Tag_Compiler_If extends Motif_Tag_Compiler_Abstract
             'echo(\'';
 
         $this->_replaceCode($code, self::CLOSING_TAGS);
+    }
+
+    /**
+     * ...
+     */
+    protected function _compileVarMatch($var)
+    {
+        $varCode = $this->_parseVarName($var);
+		$condition = $this->_parseCondition();
+
+        /**
+         * Parse <motif:if var="tplVar" [condition="gte" isvar="isvar"] value="somevalue">
+         */
+        if (($value = $this->getAttribute('value')) !== false)
+        {
+            $preOp = '';
+            $op = '&&';
+
+            if ($condition === '!=')
+            {
+                $preOp = '!';
+                $op = '||';
+            }
+
+            /**
+             * value: true, false, numeric
+             */
+            if (preg_match('/^(true|false|([0-9]+))$/', strtolower($value)))
+            {
+                $value = strtolower($value);
+            }
+
+            /**
+             * value: isvar
+             */
+            elseif ($this->getAttribute('isvar') && $this->_isVarMatch($value))
+            {
+                $value = $this->_parseVarName($value);
+
+                $op = sprintf('&& isset(%s) &&', $value);
+
+                if ($condition === '!=')
+                {
+                    $op = sprintf('|| !isset(%s) ||', $value);
+                }
+            }
+
+            /**
+             * value: string
+             */
+            else
+            {
+                $value = sprintf('\'%s\'', $value);
+            }
+
+			$code = "({$preOp}isset({$varCode}) $op ({$varCode} $condition $value))";
+        }
+
+        /**
+         * Parse <motif:if var="tplVar" [condition="notexists"]>
+         */
+        else
+        {
+            $preOp = '';
+            $preOp2 = '!';
+            $op = '&&';
+
+            if ($condition === 'notexists')
+            {
+                $preOp = '!';
+                $preOp2 = '';
+                $op = '||';
+            }
+
+            $code = "({$preOp}isset({$varCode}) $op {$preOp2}empty({$varCode}))";
+        }
+
+        return $code;
     }
 
 }
