@@ -49,7 +49,7 @@ abstract class Motif_Tag_Compiler_Abstract
     const MATCH_VAR         = '[A-z0-9_.]+';
     const MATCH_MULTI_VAR   = '[A-z0-9_.&|\s]+';
     const MATCH_WILDCARD    = '[^"]+';
-    const MATCH_CONDITION   = '(not)?exists|>|gt|>=|gte|<|lt|<=|lte|<>|\!=|=|(not)?equal';
+    const MATCH_CONDITION   = '(not)?exists|>|gt|>=|gte|<|lt|<=|lte|<>|\!=|=|(not)?equal|(not)?in';
 
     const LOGICAL_OR        = '||';
     const LOGICAL_AND       = '&&';
@@ -359,11 +359,9 @@ abstract class Motif_Tag_Compiler_Abstract
         switch ($condition)
         {
             case 'exists':
-                $condition = 'exists';
-                break;
-
             case 'notexists':
-                $condition = 'notexists';
+            case 'in':
+            case 'notin':
                 break;
 
             case '>':

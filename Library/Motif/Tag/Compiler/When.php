@@ -49,49 +49,69 @@ class Motif_Tag_Compiler_When extends Motif_Tag_Compiler_Abstract
              */
             if (($value = $this->getAttribute('value')) !== false)
             {
-                $preOp = '';
-                $op = '&&';
-
-                if ($condition === '!=')
+                if (in_array($condition, array('in', 'notin')))
                 {
-                    $preOp = '!';
-                    $op = '||';
+                    $preOp = '';
+                    $op = '&&';
+
+                    if ($condition === 'notin')
+                    {
+                        $preOp = '!';
+                        $op = '||';
+                    }
+
+                    $valueCode = $this->_parseVarName($value);
+
+                    $code = NL .
+                        "case ({$preOp}isset({$valueCode}) {$op} {$preOp}in_array({$varCode}, {$valueCode})):" . NL .
+                            'echo(\'';
                 }
-
-                /**
-                 * value: true, false, numeric
-                 */
-                if (preg_match('/^(true|false|([0-9]+))$/', strtolower($value)))
+                else
                 {
-                    $value = strtolower($value);
-                }
-
-                /**
-                 * value: isvar
-                 */
-                elseif ($this->getAttribute('isvar') && $this->_isVarMatch($value))
-                {
-                    $value = $this->_parseVarName($value);
-
-                    $op = sprintf('&& isset(%s) &&', $value);
+                    $preOp = '';
+                    $op = '&&';
 
                     if ($condition === '!=')
                     {
-                        $op = sprintf('|| !isset(%s) ||', $value);
+                        $preOp = '!';
+                        $op = '||';
                     }
-                }
 
-                /**
-                 * value: string
-                 */
-                else
-                {
-                    $value = sprintf('\'%s\'', $value);
-                }
+                    /**
+                     * value: true, false, numeric
+                     */
+                    if (preg_match('/^(true|false|([0-9]+))$/', strtolower($value)))
+                    {
+                        $value = strtolower($value);
+                    }
 
-                $code = NL .
-                    "case ({$preOp}isset({$varCode}) $op ({$varCode} $condition $value)):" . NL .
-                        'echo(\'';
+                    /**
+                     * value: isvar
+                     */
+                    elseif ($this->getAttribute('isvar') && $this->_isVarMatch($value))
+                    {
+                        $value = $this->_parseVarName($value);
+
+                        $op = sprintf('&& isset(%s) &&', $value);
+
+                        if ($condition === '!=')
+                        {
+                            $op = sprintf('|| !isset(%s) ||', $value);
+                        }
+                    }
+
+                    /**
+                     * value: string
+                     */
+                    else
+                    {
+                        $value = sprintf('\'%s\'', $value);
+                    }
+
+                    $code = NL .
+                        "case ({$preOp}isset({$varCode}) $op ({$varCode} $condition $value)):" . NL .
+                            'echo(\'';
+                }
             }
 
             /**
