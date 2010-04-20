@@ -45,7 +45,7 @@ class Motif_Tag_Compiler_Out_Nvl extends Motif_Tag_Compiler_Abstract
 
             $code = '' .
                 '\');' . NL .
-                "if (isset({$varCode}) && !empty({$varCode}))" . NL .
+                "if (isset({$varCode}) && (strval({$varCode}) != ''))" . NL .
                 '{' . NL .
                     "echo {$varCode};" . NL .
                 '}' . NL .
