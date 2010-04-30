@@ -134,7 +134,7 @@ class Motif_Tag_Compiler_If extends Motif_Tag_Compiler_Abstract
                 $value = sprintf('\'%s\'', $value);
             }
 
-			$code = "({$preOp}isset({$varCode}) $op ({$varCode} $condition $value))";
+			$code = "({$preOp}isset({$varCode}) $op (strval({$varCode}) $condition $value))";
         }
 
         /**

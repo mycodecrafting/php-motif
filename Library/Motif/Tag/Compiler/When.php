@@ -109,7 +109,7 @@ class Motif_Tag_Compiler_When extends Motif_Tag_Compiler_Abstract
                     }
 
                     $code = NL .
-                        "case ({$preOp}isset({$varCode}) $op ({$varCode} $condition $value)):" . NL .
+                        "case ({$preOp}isset({$varCode}) $op (strval({$varCode}) $condition $value)):" . NL .
                             'echo(\'';
                 }
             }
