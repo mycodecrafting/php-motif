@@ -256,10 +256,10 @@ class Motif_Engine
      */
     protected function _stripSpace($code)
     {
+        @ini_set('pcre.backtrack_limit', 100000000);
         $code = preg_replace('/echo\(\'(\s*)\'\);/s', '', $code);
         $code = preg_replace('/echo\(\'([\r\n]+)(.*)\'\);/Us', 'echo(\'$2\');', $code);
         $code = preg_replace('/echo\(\'(.*)([\r\n]+)([\s]+)\'\);/Us', 'echo(\'$1' . "\n" . '\');', $code);
-
         return $code;
     }
 
