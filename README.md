@@ -89,6 +89,7 @@ $template->setVar('animals', $block);
 Creates a logical if block
 
 **Syntax:** ``<motif:if var="tplVar" [condition="gte" isvar="isvar"] value="somevalue">``
+
 **Syntax:** ``<motif:if var="tplVar" [condition="notexists"]>``
 
 ---
@@ -209,5 +210,23 @@ elsewhere...
 ---
 
 ### motif:include
+
+Include another template into the current template. Useful to include a library of common fragments, or to strucutre re-usable blocks.
+
+**Syntax:** ``<motif:include src="relative/path/to/template.html" />``
+
+**Example:**
+
+```html
+<!-- comment: Includes some common UI controls -->
+<motif:include src="common/ui/controls.html" />
+
+<!-- pagination fragment defined in common/ui/controls.html -->
+{pagination}
+<div id="paged-content">
+    <!-- content -->
+</div>
+{pagination}
+```
 
 ---
