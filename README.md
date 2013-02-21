@@ -79,3 +79,135 @@ $template->setVar('animals', $block);
 ```
 
 ---
+
+### motif:noblock
+
+---
+
+### motif:if
+
+Creates a logical if block
+
+**Syntax:** ``<motif:if var="tplVar" [condition="gte" isvar="isvar"] value="somevalue">``
+**Syntax:** ``<motif:if var="tplVar" [condition="notexists"]>``
+
+---
+
+### motif:choose
+
+---
+
+### motif:when
+
+---
+
+### motif:otherwise
+
+---
+
+### motif:fragment
+
+Places a block of the template into a variable for use elsewhere in the template(s). Useful for blocks that repeat often, such as pagination controls.
+
+The fragment is not parsed until it is re-used elsewhere in the template, and thus, fragements may contain Motif tags and template variables.
+
+**Syntax:** ``<motif:fragment name="varName"> ... </motif:fragment>``
+
+**Tag Attributes:**
+
+  * **name:** the variable name to assign the fragment to
+
+**Exmaple:**
+
+```html
+<motif:fragment name="pagination">
+    <ul>
+    <motif:block var="page.links">
+        <motif:choose>
+            <motif:when var="current">
+                <li class="active">{page}</li>
+            </motif:when>
+            <motif:otherwise>
+                <li><a href="?page={page}" title="Goto page {page}">{page}</a></li>
+            </motif:otherwise>
+        </motif:choose>
+    </motif:block>
+    </ul>
+</motif:fragment>
+```
+
+elsewhere...
+
+```html
+{pagination}
+<div id="paged-content">
+    <!-- content -->
+</div>
+{pagination}
+```
+
+---
+
+### motif:var
+
+---
+
+### motif:out
+
+---
+
+### motif:out:nvl
+
+---
+
+### motif:number:format
+
+---
+
+### motif:date:format
+
+---
+
+### motif:array:count
+
+---
+
+### motif:array:join
+
+---
+
+### motif:form
+
+---
+
+### motif:form:checkbox
+
+---
+
+### motif:form:hidden
+
+---
+
+### motif:form:passsword
+
+---
+
+### motif:form:radio
+
+---
+
+### motif:form:select
+
+---
+
+### motif:form:text
+
+---
+
+### motif:form:textarea
+
+---
+
+### motif:include
+
+---
