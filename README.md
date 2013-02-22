@@ -47,28 +47,35 @@ All Motif tags are in the **motif** namespace and begin with ``motif:``
 
 **Variables**
 
-  * [Template Variables](#motif-tpl-vars)
+  * [Template Variables](#template-variables)
 
-**Language Control Structures**
+**Control Structures**
 
-  * [motif:block](#motif-block)
-  * [motif:noblock](#motif-noblock)
-  * [motif:if](#motif-if)
-  * [motif:choose](#motif-choose)
-    * [motif:when](#motif-when)
-    * [motif:otherwise](#motif-otherwise)
-  * [motif:fragment](#motif-fragment)
-  * [motif:var](#motif-var)
+  * [block](#motifblock)
+  * [noblock](#motifnoblock)
+  * [if](#motifif)
+  * [choose](#motifchoose)
+    * [when](#motifwhen)
+    * [otherwise](#motifotherwise)
+  * [fragment](#motiffragment)
+  * [var](#motifvar)
+  * [out](#motifout)
+  * [include](#motifinclude)
 
 **Elements**
 
+**Formatting & Functions**
+
+  * [date:format](#motifdateformat)
+  * [number:format](#motifnumberformat)
+
 ---
 
-### Template Variables<a id="motif-tpl-vars" />
+### Template Variables
 
 ---
 
-### motif:block<a id="motif-block"/>
+### motif:block
 
 Creates an iterative block.
 
@@ -101,11 +108,11 @@ $template->setVar('animals', $block);
 
 ---
 
-### motif:noblock<a id="motif-noblock"/>
+### motif:noblock
 
 ---
 
-### motif:if<a id="motif-if"/>
+### motif:if
 
 Creates a logical if block
 
@@ -115,19 +122,19 @@ Creates a logical if block
 
 ---
 
-### motif:choose<a id="motif-choose"/>
+### motif:choose
 
 ---
 
-### motif:when<a id="motif-when"/>
+### motif:when
 
 ---
 
-### motif:otherwise<a id="motif-otherwise"/>
+### motif:otherwise
 
 ---
 
-### motif:fragment<a id="motif-fragment"/>
+### motif:fragment
 
 Places a block of the template into a variable for use elsewhere in the template(s). Useful for blocks that repeat often, such as pagination controls.
 
@@ -170,7 +177,7 @@ elsewhere...
 
 ---
 
-### motif:var<a id="motif-var"/>
+### motif:var
 
 ---
 
