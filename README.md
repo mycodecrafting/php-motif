@@ -39,15 +39,36 @@ echo $template->build();
 <p>The quick brown fox jumped over the fence.</p>
 ```
 
-## Motif Language Constructs
+## Motif Template Language
 
-Motif uses XHTML-like tags to form language constructs.
+Motif uses XHTML-like tags to form the template language.
 
 All Motif tags are in the **motif** namespace and begin with ``motif:``
 
+**Variables**
+
+  * [Template Variables](#motif-tpl-vars)
+
+**Language Control Structures**
+
+  * [motif:block](#motif-block)
+  * [motif:noblock](#motif-noblock)
+  * [motif:if](#motif-if)
+  * [motif:choose](#motif-choose)
+    * [motif:when](#motif-when)
+    * [motif:otherwise](#motif-otherwise)
+  * [motif:fragment](#motif-fragment)
+  * [motif:var](#motif-var)
+
+**Elements**
+
 ---
 
-### motif:block
+### Template Variables<a id="motif-tpl-vars" />
+
+---
+
+### motif:block<a id="motif-block"/>
 
 Creates an iterative block.
 
@@ -80,11 +101,11 @@ $template->setVar('animals', $block);
 
 ---
 
-### motif:noblock
+### motif:noblock<a id="motif-noblock"/>
 
 ---
 
-### motif:if
+### motif:if<a id="motif-if"/>
 
 Creates a logical if block
 
@@ -94,19 +115,19 @@ Creates a logical if block
 
 ---
 
-### motif:choose
+### motif:choose<a id="motif-choose"/>
 
 ---
 
-### motif:when
+### motif:when<a id="motif-when"/>
 
 ---
 
-### motif:otherwise
+### motif:otherwise<a id="motif-otherwise"/>
 
 ---
 
-### motif:fragment
+### motif:fragment<a id="motif-fragment"/>
 
 Places a block of the template into a variable for use elsewhere in the template(s). Useful for blocks that repeat often, such as pagination controls.
 
@@ -149,7 +170,7 @@ elsewhere...
 
 ---
 
-### motif:var
+### motif:var<a id="motif-var"/>
 
 ---
 
